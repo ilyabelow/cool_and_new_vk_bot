@@ -42,13 +42,13 @@ def test_message(event):
         vk.messages.send(peer_id=event.user_id,
                          message="Секундочку",
                          random_id=iterate_random_id())
-        handle_weather_request(event, event.text[len('Покажи погоду в городе '):])
+        handle_weather_request(event.user_id, event.text[len('Покажи погоду в городе '):])
         return
     # hometown
     # TODO what will happen if current city is not stated?
     if event.text == 'Покажи погоду в моём городе':
         vk.messages.send(peer_id=event.user_id, message="Секундочку", random_id=iterate_random_id())
-        handle_weather_request(event,
+        handle_weather_request(event.user_id,
                                vk.users.get(user_ids=[event.user_id],
                                             fields=['city'])[0]['city']['title'])
         return
