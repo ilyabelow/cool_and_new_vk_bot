@@ -1,9 +1,10 @@
 import json
-import time
 
 import requests
 import vk_api
 from vk_api.longpoll import VkEventType
+
+from const import *
 
 
 def iterate_random_id():
@@ -98,9 +99,8 @@ def handle_weather_request(user_id, city_name):
     :param city_name: where to search for weather forecast
     :return: None
     """
-    with open('weather_token.txt', 'r') as file:
-        token = file.readline()
-    response = requests.get("http://api.openweathermap.org/data/2.5/weather?q={}&APPID={}".format(city_name, token))
+    response = requests.get(
+        "http://api.openweathermap.org/data/2.5/weather?q={}&APPID={}".format(city_name, weather_token))
     weather = json.loads(response.text)
     if weather["cod"] != 200:
         vk.messages.send(peer_id=user_id,
@@ -119,11 +119,6 @@ def handle_weather_request(user_id, city_name):
                      random_id=iterate_random_id())
 
 
-# Bot init
-with open('bot_token.txt', 'r') as file:
-    bot_token = file.readline()
-
-random_id = time.time()
 vk_session = vk_api.VkApi(token=bot_token)
 vk = vk_session.get_api()
 listen()
