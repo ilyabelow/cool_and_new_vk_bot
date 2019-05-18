@@ -53,12 +53,16 @@ def test_message(event):
         handle_weather_request(event.user_id, text[len('Покажи погоду в городе '):])
         return
     # hometown
-    # TODO what will happen if current city is not stated?
     if 'покажи погоду в моем городе' in text:
         vk.messages.send(peer_id=event.user_id, message="Секундочку", random_id=state.iterate())
-        handle_weather_request(event.user_id,
-                               vk.users.get(user_ids=[event.user_id],
-                                            fields=['city'])[0]['city']['title'])
+        user_with_city = vk.users.get(user_ids=[event.user_id], fields=['city'])[0]
+        if 'city' in user_with_city.keys():
+            handle_weather_request(event.user_id, user_with_city['city']['title'])
+        else:
+            vk.messages.send(peer_id=event.user_id, message="У тебя на страничке не указан текущий город, "
+                                                            "а как определить твоё текущее местоположение по-другому"
+                                                            " я не знаю :(", random_id=state.iterate())
+
         return
     # thankfulness
     if "пасиб" in text:
