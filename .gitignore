@@ -1,0 +1,4 @@
+venv/
+.directory
+.idea/
+*token.txt
